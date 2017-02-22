@@ -12,7 +12,7 @@ audio_pulse_threshold = 0.1;
 audio_pulse_duration = 0.001;
 frame_split_gap = 0.1; % allow one dropped frame?
 output_mat = true;
-output_av = true;
+output_av = false;
 
 %% CHECKS
 
