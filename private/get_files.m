@@ -1,5 +1,5 @@
 function full_files = get_files(directory, mask)
-%GET_FILES Get a list of files by directory and extension
+%GET_FILES Get a list of files by directory matching mask
 
 % default to all files
 if ~exist('mask', 'var')
