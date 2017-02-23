@@ -124,7 +124,7 @@ end
 %% SPLIT FRAMES BASED ON INTRINSIC TIMING
 
 % split frames
-is_split = [false; diff(frame_time_between) > frame_split_gap];
+is_split = frame_time_between > frame_split_gap;
 expected_audio = sum(is_split) + 1;
 number_seq = sum(is_split) + 1;
 
