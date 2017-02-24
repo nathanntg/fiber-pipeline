@@ -2,11 +2,24 @@ function process_files(directory, cb, name)
 %PROCESS_FILES Summary of this function goes here
 %   Detailed explanation goes here
 
-% FIND ALL FILES
+% parameters
+show_progress = true;
+
+% find all files
 files_mat = get_files_recursive(directory, '*.mat');
 
-% FOR EACH
+% show progress
+if show_progress
+    h = waitbar(0, 'Processing files...');
+end
+
+% for each
 for i = 1:length(files_mat)
+    % update progress
+    if show_progress
+        waitbar(i / length(files_mat), h);
+    end
+    
     % load structure
     w = warning('off', 'MATLAB:load:variableNotFound');
     s = load(files_mat{i}, 'processing');
@@ -40,6 +53,11 @@ for i = 1:length(files_mat)
     
     % save
     save(files_mat{i}, '-v7.3', '-struct', 's');
+end
+
+% close progress
+if show_progress
+    close(h);
 end
 
 end
