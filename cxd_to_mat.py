@@ -15,14 +15,19 @@ def eprint(*args, **kwargs):
 
 def _cxd_to_mat(dir_in, file_cxd, dir_temp, dir_out):
     # step 1. extract cxd file
-    extract_cxd(file_cxd, dir_temp)
+    try:
+        extract_cxd(file_cxd, dir_temp)
+    except ExtractError as e:
+        print('Extraction error: %s' % e)
+        raise Exception('Failed')
 
     # step 2. run matlab
     eng = matlab.engine.start_matlab()
     try:
         eng.combine_audio_video(dir_temp, '', dir_in, dir_out, nargout=0)
     except matlab.engine.MatlabExecutionError as e:
-        print('Error: %s' % e)
+        print('MATLAB Error: %s' % e)
+        raise Exception('Failed')
     finally:
         eng.quit()
 
@@ -53,6 +58,10 @@ def main():
 
         # create directory
         os.mkdir(dir_out)
+    else:
+        if len([x for x in os.listdir(dir_out) if x[-4:] == '.mat']) > 0:
+            eprint('Directory not empty: %s' % dir_out)
+            sys.exit(1)
 
     # find CXD file
     re_cxd = re.compile(r'\.cxd$', re.I)
