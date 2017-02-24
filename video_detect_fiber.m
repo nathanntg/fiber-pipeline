@@ -43,7 +43,7 @@ frame = mat2gray(imgaussfilt(video(:, :, frame_number), gauss_filter));
 
 %% ATTEMPT 1: circle detection
 
-[centers, radii] = imfindcircles(frame, radius_range, 'ObjectPolarity', 'bright', 'Sensitivity', 0.9);
+[centers, radii] = imfindcircles(frame, radius_range, 'ObjectPolarity', 'bright', 'Sensitivity', 0.95);
 
 % debugging, show fiber
 if debug
