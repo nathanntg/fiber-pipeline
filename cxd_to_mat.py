@@ -4,6 +4,8 @@ import os
 import re
 import sys
 import tempfile
+import traceback
+import subprocess
 import matlab.engine
 from extract_cxd import extract_cxd, ExtractError
 
@@ -14,19 +16,26 @@ def eprint(*args, **kwargs):
 
 
 def _cxd_to_mat(dir_in, file_cxd, dir_temp, dir_out):
+    # prep matlab engine
+    eng_future = matlab.engine.start_matlab('-nodesktop -nojvm', async=True)
+
     # step 1. extract cxd file
     try:
         extract_cxd(file_cxd, dir_temp)
     except ExtractError as e:
-        print('Extraction error: %s' % e)
+        eprint('Extraction error: %s' % e)
+        traceback.print_exc()
         raise Exception('Failed')
 
+    # get matlab engine
+    eng = eng_future.result()
+
     # step 2. run matlab
-    eng = matlab.engine.start_matlab()
     try:
         eng.combine_audio_video(dir_temp, '', dir_in, dir_out, nargout=0)
     except matlab.engine.MatlabExecutionError as e:
-        print('MATLAB Error: %s' % e)
+        eprint('MATLAB Error: %s' % e)
+        traceback.print_exc()
         raise Exception('Failed')
     finally:
         eng.quit()
@@ -77,6 +86,7 @@ def main():
         _cxd_to_mat(dir_in, cxd[0], dir_temp, dir_out)
     except Exception as e:
         eprint('Error: %s' % e)
+        traceback.print_exc()
         sys.exit(1)
     else:
         print('Done!')
