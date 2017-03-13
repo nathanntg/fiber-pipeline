@@ -33,6 +33,10 @@ if isempty(radius_range)
             % 450 550
             radius_range = [450 648] ./ 2;
             
+        case 10
+            % 450 550
+            radius_range = [1002 1200] ./ 2;
+            
         otherwise
             error('Uncalibrated objective: %d.', objective);
     end
@@ -43,7 +47,7 @@ frame = mat2gray(imgaussfilt(video(:, :, frame_number), gauss_filter));
 
 %% ATTEMPT 1: circle detection
 
-[centers, radii] = imfindcircles(frame, radius_range, 'ObjectPolarity', 'bright', 'Sensitivity', 0.95);
+[centers, radii] = imfindcircles(frame, radius_range, 'ObjectPolarity', 'bright', 'Sensitivity', 0.98);
 
 % debugging, show fiber
 if debug
