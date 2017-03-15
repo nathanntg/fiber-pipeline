@@ -14,6 +14,37 @@ def eprint(*args, **kwargs):
     print(*args, file=sys.stderr, **kwargs)
 
 
+def query_yes_no(question, default=True):
+    """Ask a yes/no question via raw_input() and return their answer.
+
+    "question" is a string that is presented to the user.
+    "default" is the presumed answer if the user just hits <Enter>.
+        It must be "yes" (the default), "no" or None (meaning
+        an answer is required of the user).
+
+    The "answer" return value is True for "yes" or False for "no".
+
+    from: http://stackoverflow.com/questions/3041986/apt-command-line-interface-like-yes-no-input
+    """
+    valid = {'yes': True, 'y': True, 'ye': True, 'no': False, 'n': False}
+
+    if default is not None and default:
+        prompt = ' [Y/n] '
+    elif default is not None and not default:
+        prompt = ' [y/N] '
+    else:
+        prompt = ' [y/n] '
+
+    while True:
+        sys.stdout.write(question + prompt)
+        choice = raw_input().lower()
+        if default is not None and choice == '':
+            return default
+        elif choice in valid:
+            return valid[choice]
+        else:
+            sys.stdout.write("Please respond with 'yes' or 'no' (or 'y' or 'n').\n")
+
 
 def _cxd_to_mat(dir_in, file_cxd, dir_temp, dir_out):
     # prep matlab engine
@@ -32,11 +63,19 @@ def _cxd_to_mat(dir_in, file_cxd, dir_temp, dir_out):
 
     # step 2. run matlab
     try:
-        eng.combine_audio_video(dir_temp, '', dir_in, dir_out, nargout=0)
-    except matlab.engine.MatlabExecutionError as e:
-        eprint('MATLAB Error: %s' % e)
-        traceback.print_exc()
-        raise Exception('Failed')
+        while True:
+            try:
+                eng.combine_audio_video(dir_temp, '', dir_in, dir_out, nargout=0)
+            except matlab.engine.MatlabExecutionError as e:
+                # print details
+                eprint('MATLAB Error: %s' % e)
+                eprint('Temporary Directory: %s' % dir_temp)
+
+                # offer option to reattempt process
+                if not query_yes_no('Retry combining audio and video?'):
+                    raise Exception('Failed')
+            else:
+                break # break loop
     finally:
         eng.quit()
 
