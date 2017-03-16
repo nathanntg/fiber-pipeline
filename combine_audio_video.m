@@ -89,6 +89,7 @@ end
 % load audio timestamps
 audio_fs = [];
 audio_timing = cell(length(files_audio), 1);
+audio_duration = zeros(length(files_audio), 1);
 for i = 1:length(files_audio)
     % load audio
     [y, fs] = audioread(files_audio{i});
@@ -111,6 +112,9 @@ for i = 1:length(files_audio)
     
     % read out end times (in samples)
     audio_timing{i} = rot(:, 1);
+
+    % duration
+    audio_duration(i) = size(y, 1) / fs;
 end
 
 % ignore empty audio
@@ -119,6 +123,7 @@ if any(audio_empty)
     warning('Some audio contains no frames (%d file(s)) and will be ignored.', sum(audio_empty));
     files_audio = files_audio(~audio_empty);
     audio_timing = audio_timing(~audio_empty);
+    audio_duration = audio_duration(~audio_empty);
 end
 
 %% SPLIT FRAMES BASED ON INTRINSIC TIMING
@@ -129,7 +134,34 @@ expected_audio = sum(is_split) + 1;
 number_seq = sum(is_split) + 1;
 
 % simple expectation for now
-if length(audio_timing) ~= expected_audio
+if length(audio_timing) == expected_audio
+    mapping = 1:expected_audio;
+elseif length(audio_timing) > expected_audio
+    % print warning
+    warning('Intrinsic split points do not match audio files. Expected %d, but found %d. Extracting clear matches by aligning durations and gaps.', ...
+        expected_audio, length(audio_timing));
+    
+    % calculate audio time between
+    matches = regexp(files_audio, '([0-9]{4})-([0-9]{2})-([0-9]{2})\s+([0-9]{1,2})\s+([0-9]{1,2})\s([0-9]{1,2})\.m4a', 'tokens');
+
+    % convert match format to vector of numbers
+    matches = cellfun(@(x) cellfun(@str2double, x{1}), matches, 'UniformOutput', false);
+
+    % convert to date time
+    matches = cellfun(@(x) datetime(x(1), x(2), x(3), x(4), x(5), x(6)), matches, 'UniformOutput', false);
+
+    % concatenate into vector (because cell arrays suck)
+    matches = cat(1, matches{:});
+
+    % convert to time between
+    audio_time_between = seconds(diff(matches)) - audio_duration(1:(end - 1));
+    
+    % frame duration
+    video_duration = diff([1; find(frame_time_between > frame_split_gap); length(frame_time_between)]) .* median(frame_time_between);
+    
+    % perform mapping
+    mapping = map_audio_and_video(audio_duration, audio_time_between, video_duration, frame_time_between(is_split));
+else
     error('Intrinsic split points do not match audio files. Expected %d, but found %d.', ...
         expected_audio, length(audio_timing));
 end
@@ -138,11 +170,16 @@ end
 frame_seq = 1 + cumsum(is_split);
 
 %% BEGIN EXTRACTION
-nd = 1 + ceil(log10(9));
+nd = 1 + floor(log10(number_seq));
 frmt_fn = sprintf('%%s%%0%dd.%s', nd);
 for i = 1:number_seq
+    % no mapping?
+    if isnan(mapping(i))
+        continue;
+    end
+    
     % extraction number i
-    cur_frames = (frame_seq == i);
+    cur_frames = (frame_seq == mapping(i));
     
     % timing of camera (from audio) and of frames (from cxd file)
     cur_camera_sample = audio_timing{i};
