@@ -79,6 +79,14 @@ if show_progress
     h = waitbar(0, 'Matching template...');
 end
 
+% trim slash
+while strcmp(extracted_dir(end), filesep)
+    extracted_dir = extracted_dir(1:(end-1));
+end
+while strcmp(aligned_dir(end), filesep)
+    aligned_dir = aligned_dir(1:(end-1));
+end
+
 desired_len = length(template_audio);
 for i = 1:length(files)
     % relative path to file
@@ -86,11 +94,16 @@ for i = 1:length(files)
         warning('Aborting, relative path mismatch.');
         break;
     end
-    file_rel = files{i}((length(extracted_dir) + 1):end);
+    file_rel = files{i}((length(extracted_dir) + 2):end);
     
     % only replace if explicitly specified (will still reprocess files with
     % no song)
     [o_dir, o_name, ~] = fileparts(file_rel);
+    
+    if debug
+        fprintf('Synced: %s\nDest: %s\n', file_rel, fullfile(o_dir, [o_name '_1.mat']));
+    end
+    
     if ~replace && exist(fullfile(aligned_dir, o_dir, [o_name '_1.mat']), 'file')
         if show_progress
             waitbar(i / length(files));
