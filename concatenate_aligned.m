@@ -1,16 +1,28 @@
-function [audio, audio_fs, video, video_roe_smp, files] = concatenate_aligned(directory)
+function [audio, audio_fs, video, video_roe_smp, files] = concatenate_aligned(directory, num)
 %CONCATENATE_ALIGNED Summary of this function goes here
 %   Detailed explanation goes here
 
+% default to loading all
+if ~exist('num', 'var')
+    num = [];
+end
+
 % get all mat files
 files = get_files_recursive(directory, '*.mat');
+
+% how many to load
+if isempty(num)
+    num = length(files);
+else
+    num = min(num, length(files));
+end
 
 audio = [];
 audio_fs = [];
 video = [];
 video_roe_smp = [];
 
-for i = 1:length(files)
+for i = 1:num
     data = load(files{i});
     
     % audio
