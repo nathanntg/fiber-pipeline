@@ -13,13 +13,14 @@ classdef FilterRegisterSift < Filter
         use_cache = false;
         cache;
         cache_file = '';
+        cache_storage;
         
         u;
         v;
     end
     
     methods
-        function FF = FilterRegisterSift(initial_ref)
+        function FF = FilterRegisterSift(initial_ref, cache_storage)
             FF@Filter();
             
             % setup SIFT library
@@ -37,9 +38,33 @@ classdef FilterRegisterSift < Filter
                 [FF.ref_f, FF.ref_d] = vl_sift(initial_ref);
                 FF.reuse_ref = true;
             end
+            
+            % cache storage
+            if exist('cache_storage', 'var') && ~isempty(cache_storage)
+                FF.cache_storage = cache_storage;
+            end
         end
         
         function setup(FF, video_details, dim_in)
+            % has cache storage
+            if ~isempty(FF.cache_storage)
+                if islogical(FF.cache_storage)
+                    [path, nm, ~] = fileparts(video_details.file);
+                    cur_cache_storage = fullfile(path, [nm '.cache-sift.mat']);
+                else
+                    cur_cache_storage = FF.cache_storage;
+                end
+                
+                % file exists
+                if exist(cur_cache_storage, 'file')
+                    cur_cache = load(cur_cache_storage);
+                    if cur_cache.version == 1
+                        FF.cache_file = cur_cache.cache_file;
+                        FF.cache = cur_cache.cache;
+                    end
+                end
+            end
+            
             if ~isempty(FF.cache_file) && strcmp(FF.cache_file, video_details.file)
                 FF.use_cache = true;
             else
@@ -51,6 +76,22 @@ classdef FilterRegisterSift < Filter
             
             % prepare meshgrid
             [FF.u, FF.v] = meshgrid(1:dim_in(2), 1:dim_in(1));
+        end
+        
+        function teardown(FF, video_details)
+            % has cache storage
+            if ~isempty(FF.cache_storage) && FF.use_cache
+                if islogical(FF.cache_storage)
+                    [path, nm, ~] = fileparts(video_details.file);
+                    cur_cache_storage = fullfile(path, [nm '.cache-sift.mat']);
+                else
+                    cur_cache_storage = FF.cache_storage;
+                end
+                
+                % save cache
+                s = struct('version', 1, 'cache_file', FF.cache_file, 'cache', FF.cache); %#ok<NASGU>
+                save(cur_cache_storage, '-struct', 's');
+            end
         end
         
         function frame = processFrame(FF, frame, i)

@@ -13,15 +13,15 @@ classdef AnalysisRange < Analysis
         end
         
         function setup(FA, video_details, dim_in)
+            % call parent setup
+            setup@Analysis(FA, video_details, dim_in);
+            
+            % empty containers
             FA.mn = [];
             FA.mx = [];
         end
         
-        function result = finalize(FA, video_details)
-            result = cat(3, FA.mn, FA.mx);
-        end
-        
-        function processFrame(FA, frame, i)
+        function runFrame(FA, frame, i)
             if i == 1
                 FA.mn = frame;
                 FA.mx = frame;
@@ -30,6 +30,10 @@ classdef AnalysisRange < Analysis
             
             FA.mn = min(FA.mn, frame);
             FA.mx = max(FA.mx, frame);
+        end
+        
+        function result = getResult(FA)
+            result = cat(3, FA.mn, FA.mx);
         end
     end
     

@@ -3,7 +3,8 @@ classdef AnalysisFrame < Analysis
     %   Detailed explanation goes here
     
     properties (Access=protected)
-        frame_idx;
+        frame_idx; % relative frame indices
+        frame_idx_abs; % absolute frame indices (calculated during setup)
         frames;
     end
     
@@ -15,17 +16,19 @@ classdef AnalysisFrame < Analysis
         end
         
         function setup(FA, video_details, dim_in)
+            % call parent setup
+            setup@Analysis(video_details, dim_in);
+            
+            % correct negative indices
             neg = FA.frame_idx < 0;
             if any(neg)
-                FA.frame_idx(neg) = video_details.frames + 1 + FA.frame_idx(neg);
+                FA.frame_idx_abs(neg) = video_details.frames + 1 + FA.frame_idx(neg);
+            else
+                FA.frame_idx_abs = FA.frame_idx;
             end
         end
         
-        function result = finalize(FA, video_details)
-            result = FA.frames;
-        end
-        
-        function processFrame(FA, frame, i)
+        function runFrame(FA, frame, i)
             b = FA.frame_idx == i;
             if any(b)
                 % initialize
@@ -35,6 +38,10 @@ classdef AnalysisFrame < Analysis
                 
                 FA.frames(:, :, b) = frame;
             end
+        end
+        
+        function result = getResult(FA)
+            result = FA.frames;
         end
     end
     
