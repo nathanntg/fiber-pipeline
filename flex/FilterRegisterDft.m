@@ -26,6 +26,14 @@ classdef FilterRegisterDft < Filter
             end
         end
         
+        function type_out = getType(FF, type_in)
+            if strcmp(type_in, 'double')
+                type_out = 'double';
+            else
+                type_out = 'single';
+            end
+        end
+        
         function frame = processFrame(FF, frame, i)
             % convert from integer
             if ~isa(frame, 'double') && ~isa(frame, 'single')

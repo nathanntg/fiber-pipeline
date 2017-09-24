@@ -28,9 +28,9 @@ classdef AnalysisRoi < Analysis
             FA.roi_radii = radii;
         end
         
-        function setup(FA, video_details, dim_in)
+        function setup(FA, video_details, dim_in, type_in)
             % call parent setup
-            setup@Analysis(FA, video_details, dim_in);
+            setup@Analysis(FA, video_details, dim_in, type_in);
             
             % make a mesh grid based on the video dimensions
             [x, y] = meshgrid(1:dim_in(2), 1:dim_in(1));
@@ -41,8 +41,8 @@ classdef AnalysisRoi < Analysis
                 FA.masks{i} = find(((x - FA.roi_centers(i, 2)) .^ 2 + (y - FA.roi_centers(i, 1)) .^ 2) < (FA.roi_radii(i) .^ 2));
             end
             
-            % make trace
-            FA.trace = zeros(FA.number, video_details.frames);
+            % make trace (always double)
+            FA.trace = zeros(FA.number, dim_in(end));
         end
         
         function runFrame(FA, frame, i)

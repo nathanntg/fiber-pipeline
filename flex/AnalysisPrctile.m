@@ -22,9 +22,9 @@ classdef AnalysisPrctile < Analysis
             FA.per = per;
         end
         
-        function setup(FA, video_details, dim_in)
+        function setup(FA, video_details, dim_in, type_in)
             % call parent setup
-            setup@Analysis(FA, video_details, dim_in);
+            setup@Analysis(FA, video_details, dim_in, type_in);
             
             % per low and hi
             per_low = FA.per(FA.per <= 50);
@@ -34,25 +34,25 @@ classdef AnalysisPrctile < Analysis
             if isempty(per_low)
                 FA.needed_low = 0;
             else
-                FA.needed_low = 1 + round(video_details.frames * max(per_low) / 100);
+                FA.needed_low = 1 + round(dim_in(end) * max(per_low) / 100);
             end
             if isempty(per_hi)
                 FA.needed_hi = 0;
             else
-                FA.needed_hi = 1 + round(video_details.frames * max(per_hi) / 100);
+                FA.needed_hi = 1 + round(dim_in(end) * max(per_hi) / 100);
             end
             
             % check frame count
-            if video_details.frames < (1 + FA.needed_low + FA.needed_hi)
+            if dim_in(end) < (1 + FA.needed_low + FA.needed_hi)
                 error('Not enough frames.');
             end
+            
+            % allocate running
+            FA.running = zeros(dim_in(1), dim_in(2), FA.needed_low + FA.needed_hi + 1, type_in);
         end
         
         function runFrame(FA, frame, i)
-            if i == 1
-                % setup
-                FA.running = repmat(frame, 1, 1, FA.needed_low + FA.needed_hi + 1);
-            elseif i <= size(FA.running, 3)
+            if i <= size(FA.running, 3)
                 % insert into position
                 FA.running(:, :, i) = frame;
             else
@@ -70,14 +70,14 @@ classdef AnalysisPrctile < Analysis
             per_hi = 100 - FA.per(idx_hi);
             
             % allocate result (must match type)
-            FA.result = zeros([size(FA.running, 1) size(FA.running, 2) length(FA.per)], 'like', FA.running);
+            FA.result = zeros(FA.dim_in(1), FA.dim_in(2), length(FA.per), 'like', FA.running);
             
             % final sort
             FA.running = sort(FA.running, 3);
             
             % extract relevant frames
-            FA.result(:, :, idx_low) = FA.running(:, :, max(round(video_details.frames * per_low ./ 100), 1));
-            FA.result(:, :, idx_hi) = FA.running(:, :, FA.needed_low + FA.needed_hi + 1 - round(video_details.frames * per_hi ./ 100));
+            FA.result(:, :, idx_low) = FA.running(:, :, max(round(FA.dim_in(end) * per_low ./ 100), 1));
+            FA.result(:, :, idx_hi) = FA.running(:, :, FA.needed_low + FA.needed_hi + 1 - round(FA.dim_in(end) * per_hi ./ 100));
         end
         
         

@@ -4,6 +4,7 @@ classdef Analysis < Node
     
     properties
         dim_in;
+        type_in;
     end
     
     methods
@@ -14,11 +15,13 @@ classdef Analysis < Node
             error('Analysis nodes do not support outputs.');
         end
         
-        function setup(FA, video_details, dim_in)
-            % pass on to output, but not applicable for analysis
-            setup@Node(FA, video_details, dim_in);
-
+        function setup(FA, video_details, dim_in, type_in)
+            % cache inputs
             FA.dim_in = dim_in;
+            FA.type_in = type_in;
+            
+            % pass on to output, but not applicable for analysis
+            setup@Node(FA, video_details, dim_in, type_in);
         end
     end
     

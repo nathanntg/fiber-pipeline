@@ -14,11 +14,13 @@ classdef FilterDownsample < Filter
         end
         
         function dim_out = getDimensions(FF, dim_in)
-            dim_out = dim_in ./ FF.factor;
+            dim_out = [ceil(dim_in(1) ./ FF.factor), ...
+                ceil(dim_in(2) ./ FF.factor), ...
+                dim_in(3)];
         end
         
         function frame = processFrame(FF, frame, i)
-            frame = imresize(frame, FF.dim_out);
+            frame = imresize(frame, FF.dim_out(1:2));
         end
     end
     

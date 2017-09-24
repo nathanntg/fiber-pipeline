@@ -13,19 +13,18 @@ classdef WriterVariable < Analysis
             FA@Analysis();
         end
         
-        function setup(FA, video_details, dim_in)
+        function setup(FA, video_details, dim_in, type_in)
             % call parent setup
-            setup@Analysis(FA, video_details, dim_in);
+            setup@Analysis(FA, video_details, dim_in, type_in);
             
             % store times
-            FA.times = (1:video_details.frames) .* video_details.exposure;
+            FA.times = (1:dim_in(end)) .* video_details.exposure;
+            
+            % allocate
+            FA.video = zeros(dim_in, type_in);
         end
         
         function runFrame(FA, frame, i)
-            if i == 1
-                FA.video = zeros(size(frame, 1), size(frame, 2), length(FA.times), 'like', frame);
-            end
-            
             FA.video(:, :, i) = frame;
         end
         

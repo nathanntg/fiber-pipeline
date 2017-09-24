@@ -17,7 +17,7 @@ classdef ReaderVariable < Reader
             FR.video = video;
         end
         
-        function details = getVideoDetails(FR)
+        function [details, dim_out, type_out] = getVideoDetails(FR)
             % pull out relevant information
             frames = size(FR.video, 3);
             height = size(FR.video, 1);
@@ -30,14 +30,18 @@ classdef ReaderVariable < Reader
                 'exposure', exposure, ...
                 'width', width, 'height', height ...
             );
+        
+            % return types
+            dim_out = [height width frames];
+            type_out = class(FR.video);
         end
         
-        function setup(FR, video_details, dim_in)
+        function setup(FR, video_details, dim_in, type_in)
+            % call parent
+            setup@Reader(FR, video_details, dim_in, type_in);
+            
             % reset frame number
             FR.frame_number = 0;
-            
-            % call parent
-            setup@Reader(FR, video_details, dim_in);
         end
         
         function teardown(FR, video_details)

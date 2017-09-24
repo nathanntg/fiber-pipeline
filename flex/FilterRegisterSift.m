@@ -45,9 +45,13 @@ classdef FilterRegisterSift < Filter
             end
         end
         
-        function setup(FF, video_details, dim_in)
+        function type_out = getType(FF, type_in)
+            type_out = 'double';
+        end
+        
+        function setup(FF, video_details, dim_in, type_in)
             % call parent
-            setup@Filter(FF, video_details, dim_in);
+            setup@Filter(FF, video_details, dim_in, type_in);
             
             % has cache storage
             if ~isempty(FF.cache_storage)
@@ -72,7 +76,7 @@ classdef FilterRegisterSift < Filter
                 FF.use_cache = true;
             else
                 % cache for subsequent pass
-                FF.cache = repmat(eye(3), 1, 1, video_details.frames);
+                FF.cache = repmat(eye(3), 1, 1, dim_in(end));
                 FF.use_cache = false;
                 FF.cache_file = video_details.file;
             end

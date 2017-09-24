@@ -4,6 +4,8 @@ classdef Reader < Node
     
     properties
         video_details;
+        dim_out;
+        type_out;
     end
     
     methods
@@ -13,13 +15,13 @@ classdef Reader < Node
         
         function run(FR)
             % get video details
-            FR.video_details = FR.getVideoDetails();
+            [FR.video_details, FR.dim_out, FR.type_out] = FR.getVideoDetails();
             
             % call setup
-            FR.setup(FR.video_details, [FR.video_details.height FR.video_details.width]);
+            FR.setup(FR.video_details, FR.dim_out, FR.type_out);
             
             % for each frame
-            for i = 1:FR.video_details.frames
+            for i = 1:FR.dim_out(end)
                 FR.runFrame([], i);
             end
 
@@ -27,13 +29,13 @@ classdef Reader < Node
             FR.teardown(FR.video_details);
         end
         
-        function setup(FR, video_details, dim_in)
+        function setup(FR, video_details, dim_in, type_in)
             % call parent (empty)
-            setup@Node(FR, video_details, dim_in);
+            setup@Node(FR, video_details, dim_in, type_in);
             
             % setup sub-nodes
             for i = 1:length(FR.outputs)
-                FR.outputs{i}.setup(video_details, dim_in);
+                FR.outputs{i}.setup(video_details, dim_in, type_in);
             end
         end
         
@@ -54,7 +56,7 @@ classdef Reader < Node
     end
     
     methods (Abstract)
-        details = getVideoDetails(FR);
+        [details, dim_out, type_out] = getVideoDetails(FR);
         [i, frame] = readNextFrame(FR);
     end
 end

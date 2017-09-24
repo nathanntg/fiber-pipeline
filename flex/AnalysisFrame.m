@@ -15,27 +15,25 @@ classdef AnalysisFrame < Analysis
             FA.frame_idx = fetch_frame_idx;
         end
         
-        function setup(FA, video_details, dim_in)
+        function setup(FA, video_details, dim_in, type_in)
             % call parent setup
-            setup@Analysis(FA, video_details, dim_in);
+            setup@Analysis(FA, video_details, dim_in, type_in);
             
             % correct negative indices
             neg = FA.frame_idx < 0;
             if any(neg)
-                FA.frame_idx_abs(neg) = video_details.frames + 1 + FA.frame_idx(neg);
+                FA.frame_idx_abs(neg) = dim_in(end) + 1 + FA.frame_idx(neg);
             else
                 FA.frame_idx_abs = FA.frame_idx;
             end
+            
+            % allocate frames
+            FA.frames = zeros(dim_in(1), dim_in(2), length(FA.frame_idx), type_in);
         end
         
         function runFrame(FA, frame, i)
             b = FA.frame_idx == i;
             if any(b)
-                % initialize
-                if isempty(FA.frames)
-                    FA.frames = zeros(size(frame, 1), size(frame, 2), length(FA.frame_idx), 'like', frame);
-                end
-                
                 FA.frames(:, :, b) = frame;
             end
         end

@@ -18,10 +18,10 @@ classdef Node < handle
             end
         end
 
-        function setup(FN, video_details, dim)
+        function setup(FN, video_details, dim, type)
             % setup sub-nodes
             for i = 1:length(FN.outputs)
-                FN.outputs{i}.setup(video_details, dim);
+                FN.outputs{i}.setup(video_details, dim, type);
             end
         end
         

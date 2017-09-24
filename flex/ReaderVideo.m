@@ -20,7 +20,7 @@ classdef ReaderVideo < Reader
             FR.video = video;
         end
         
-        function details = getVideoDetails(FR)
+        function [details, dim_out, type_out] = getVideoDetails(FR)
             % find correspond csv file
             [path, name, ~] = fileparts(FR.video);
             data = csvread(fullfile(path, [name '.csv']));
@@ -41,9 +41,13 @@ classdef ReaderVideo < Reader
                 'width', width, 'height', height, ...
                 'depth', depth, 'bytes', bytes ...
             );
+        
+            % output types
+            dim_out = [height width frames];
+            type_out = sprintf('uint%d', 8 * ceil(depth / 8));
         end
         
-        function setup(FR, video_details, dim_in)
+        function setup(FR, video_details, dim_in, type_in)
             % open file
             FR.fh = fopen(video_details.file, 'r');
             if FR.fh < 0
@@ -58,7 +62,7 @@ classdef ReaderVideo < Reader
             FR.frame_number = 0;
             
             % call parent
-            setup@Reader(FR, video_details, dim_in);
+            setup@Reader(FR, video_details, dim_in, type_in);
         end
         
         function teardown(FR, video_details)
