@@ -30,7 +30,7 @@ classdef AnalysisRoi < Analysis
         
         function setup(FA, video_details, dim_in)
             % call parent setup
-            setup@Analysis(video_details, dim_in);
+            setup@Analysis(FA, video_details, dim_in);
             
             % make a mesh grid based on the video dimensions
             [x, y] = meshgrid(1:dim_in(2), 1:dim_in(1));

@@ -46,6 +46,9 @@ classdef FilterRegisterSift < Filter
         end
         
         function setup(FF, video_details, dim_in)
+            % call parent
+            setup@Filter(FF, video_details, dim_in);
+            
             % has cache storage
             if ~isempty(FF.cache_storage)
                 if islogical(FF.cache_storage)
@@ -92,6 +95,9 @@ classdef FilterRegisterSift < Filter
                 s = struct('version', 1, 'cache_file', FF.cache_file, 'cache', FF.cache); %#ok<NASGU>
                 save(cur_cache_storage, '-struct', 's');
             end
+            
+            % call parent
+            teardown@Filter(FF, video_details);
         end
         
         function frame = processFrame(FF, frame, i)

@@ -17,7 +17,7 @@ classdef AnalysisFrame < Analysis
         
         function setup(FA, video_details, dim_in)
             % call parent setup
-            setup@Analysis(video_details, dim_in);
+            setup@Analysis(FA, video_details, dim_in);
             
             % correct negative indices
             neg = FA.frame_idx < 0;
