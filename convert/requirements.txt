@@ -1,0 +1,2 @@
+olefile >= 0.45
+numpy >= 1.13
