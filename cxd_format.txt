@@ -1,0 +1,16 @@
+Field Data/Field 1/Details/Binning: 1.000000
+Field Data/Field 1/Details/Capture_Depth: 16.000000
+Field Data/Field 1/Details/Image_Depth: 16.000000
+Field Data/Field 1/Details/Image_Height: 2048.000000
+Field Data/Field 1/Details/Image_Width: 2048.000000
+Field Data/Field 1/Details/Time_From_Last: 0.000000
+Field Data/Field 1/Details/Time_From_Start: 0.000000
+Field Data/Field 1/i_Image1/Bitmap 1: 67:00:67:00:63:00:69:00:68:00:70:00:64:00:6c:00:68:00:6a:00:74:00:6a:00:6c:00:69:00:6f:00:65:00:69:00:67:00:63:00:64:00:6a:00:60:00:72:00:6a:00:68:00:6f:00:6d:00:5c:00...
+Field Data/Field 1/i_Image1/Details/Binning: 1.000000
+Field Data/Field 1/i_Image1/Details/Capture_Depth: 16.000000
+Field Data/Field 1/i_Image1/Details/Image_Depth: 16.000000
+Field Data/Field 1/i_Image1/Details/Image_Exposure1: 0.030003
+Field Data/Field 1/i_Image1/Details/Image_Height: 2048.000000
+Field Data/Field 1/i_Image1/Details/Image_Width: 2048.000000
+Field Data/Field 1/i_Image1/Details/Image_eCoeff1: 0.480000
+Field Data/Field 1/i_Image1/Details/Image_eOffset1: 100.000000
