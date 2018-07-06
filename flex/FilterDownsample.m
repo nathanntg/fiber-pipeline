@@ -20,7 +20,7 @@ classdef FilterDownsample < Filter
         end
         
         function frame = processFrame(FF, frame, i)
-            frame = imresize(frame, FF.dim_out(1:2));
+            frame = imresize(frame, FF.dim_out(1:2), 'box');
         end
     end
     
