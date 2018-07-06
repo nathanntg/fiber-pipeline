@@ -1,6 +1,8 @@
 classdef Reader < Node
-    %READER Summary of this class goes here
-    %   Detailed explanation goes here
+    %READER Basic reader node
+    %   A reader node only has outputs and is used to run the flex
+    %   framework network. Subclasses must define functions for getting
+    %   video details (getVideoDetails) and for reading the next frame.
     
     properties
         video_details;

@@ -1,6 +1,7 @@
 classdef WriterVariable < Analysis
-    %WRITERVARIABLE Summary of this class goes here
-    %   Detailed explanation goes here
+    %WRITERVARIABLE Write all frames to a workspace variable
+    %   Useful to debug or inspect the filtered frames, by placing them all
+    %   in a 3D matrix in the workspace.
     
     properties (Access=protected)
         times;

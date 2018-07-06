@@ -1,6 +1,12 @@
 classdef FilterRegisterSift < Filter
-    %FILTERREGISTERDFT Summary of this class goes here
-    %   Detailed explanation goes here
+    %FILTERREGISTERSIFT Motion correction using SIFT method
+    %   Pass either an initial reference image to be used for registration,
+    %   or the first frame will be used for registration. Requires the
+    %   VLFeat library (http://www.vlfeat.org/). Has the ability to cache
+    %   the transform matrices for faster reapplication of the motion
+    %   correction. Pass `true` for cache_storage to automatically store
+    %   the correciton in a file in the same folder as the video, or pass
+    %   the path to another file to use for storage.
     
     properties
     end

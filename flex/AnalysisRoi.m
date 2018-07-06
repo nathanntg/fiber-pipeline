@@ -1,6 +1,8 @@
 classdef AnalysisRoi < Analysis
-    %ANALYSISROI Summary of this class goes here
-    %   Detailed explanation goes here
+    %ANALYSISROI Extract mean trace for circular regions of interest
+    %   Specify regions of interest at creation as centers and radiuses. A
+    %   mask is used to extract mean pixel intensity for each region of
+    %   interest.
     
     properties (Access=protected)
         number;

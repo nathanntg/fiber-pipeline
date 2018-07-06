@@ -1,6 +1,7 @@
 classdef FilterRegisterDft < Filter
-    %FILTERREGISTERDFT Summary of this class goes here
-    %   Detailed explanation goes here
+    %FILTERREGISTERDFT Motion correction using DFT correction
+    %   Pass either an initial reference image to be used for registration,
+    %   or the first frame will be used for registration.
     
     properties
         upsample = 16;

@@ -6,59 +6,7 @@ import csv
 import math
 import struct
 import olefile # pip install olefile
-
-
-class ExtractError(Exception):
-    pass
-
-
-def read_int(ole, stream):
-    s = ole.openstream(stream)
-    data = s.read()
-    s.close()
-
-    # validate length
-    if len(data) != 4:
-        raise ExtractError('Expected 4 bytes for "%s"' % stream)
-
-    return struct.unpack('<i', data)[0]
-
-
-def read_double(ole, stream):
-    s = ole.openstream(stream)
-    data = s.read()
-    s.close()
-
-    # validate length
-    if len(data) != 8:
-        raise ExtractError('Expected 8 bytes for "%s"' % stream)
-
-    return struct.unpack('<d', data)[0]
-
-
-def read_data(ole, stream, expected_length=None):
-    s = ole.openstream(stream)
-    data = s.read()
-    s.close()
-
-    # validate length
-    if expected_length is not None and len(data) != expected_length:
-        raise ExtractError('Expected %d bytes for "%s"' % (expected_length, stream))
-
-    return data
-
-
-def read_debug(ole, stream):
-    s = ole.openstream(stream)
-    data = s.read()
-    s.close()
-
-    a = ""
-    if len(data) > 56:
-        data = data[0:56]
-        a = "..."
-
-    print("%s: %s%s" % (stream, ":".join("{:02x}".format(ord(c)) for c in data), a))
+from extract_cxd import ExtractError, read_int, read_double, read_data, read_debug
 
 
 def _extract_cxd(ole, to_dir, prefix):

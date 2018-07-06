@@ -1,6 +1,5 @@
 classdef Node < handle
-    %NODE Summary of this class goes here
-    %   Detailed explanation goes here
+    %NODE Base node class
     
     properties (Access=protected)
         outputs = {};

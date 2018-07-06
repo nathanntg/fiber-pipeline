@@ -1,6 +1,5 @@
 classdef ReaderVariable < Reader
-    %READERVARIABLE Summary of this class goes here
-    %   Detailed explanation goes here
+    %READERVARIABLE Read video from variable in MATLAB workspace
     
     properties
         video;

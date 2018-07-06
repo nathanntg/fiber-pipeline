@@ -1,6 +1,7 @@
 classdef ReaderVideo < Reader
-    %READERVIDEO Summary of this class goes here
-    %   Detailed explanation goes here
+    %READERVIDEO Read video from raw binary file
+    %   Uses accompanying CSV file to get pixel dimension, frame count and
+    %   frame timing.
     
     properties
         video;

@@ -1,6 +1,5 @@
 classdef FilterConvertSingle < Filter
-    %FILTERCONVERTSINGLE Summary of this class goes here
-    %   Detailed explanation goes here
+    %FILTERCONVERTSINGLE Convert frame to single
     
     properties
     end

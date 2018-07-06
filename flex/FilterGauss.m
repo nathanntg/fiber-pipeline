@@ -1,6 +1,5 @@
 classdef FilterGauss < Filter
-    %FILTER Summary of this class goes here
-    %   Detailed explanation goes here
+    %FILTER Gaussian filter frames
     
     properties
         sigma;

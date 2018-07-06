@@ -7,7 +7,8 @@ import tempfile
 import traceback
 import subprocess
 import matlab.engine
-from extract_cxd import extract_cxd, ExtractError
+from extract_cxd import ExtractError
+from extract_cxd_frames import extract_cxd
 
 
 def eprint(*args, **kwargs):

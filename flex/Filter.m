@@ -1,6 +1,9 @@
 classdef Filter < Node
-    %FILTER Summary of this class goes here
-    %   Detailed explanation goes here
+    %FILTER Basic filter node
+    %   A basic filter node that has one input and one or more outputs. By
+    %   default, outputs have the same dimension and type as the inputs
+    %   (but subclasses can override these defaults). Subclasses must
+    %   define a function for processing a frame (runFrame).
     
     properties
         dim_in;

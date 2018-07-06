@@ -1,6 +1,7 @@
 classdef FilterRegisterMatlab < Filter
-    %FILTERREGISTER Summary of this class goes here
-    %   Detailed explanation goes here
+    %FILTERREGISTERMATLAB Motion correction using MATLAB imregister method
+    %   Pass either an initial reference image to be used for registration,
+    %   or the first frame will be used for registration.
     
     properties (Access=protected)
         opt;
