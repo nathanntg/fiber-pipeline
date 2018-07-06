@@ -1,6 +1,9 @@
 classdef Analysis < Node
-    %ANALYSIS Summary of this class goes here
-    %   Detailed explanation goes here
+    %ANALYSIS Basic analysis node
+    %   An analysis node does not have an output, and will throw an error
+    %   if you attempt to add an output. Subclasses must define functions
+    %   for processing a frame (runFrame) and for getting the result
+    %   (getResult).
     
     properties
         dim_in;

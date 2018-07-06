@@ -1,6 +1,6 @@
 classdef AnalysisMean < Analysis
-    %ANALYSISMEAN Summary of this class goes here
-    %   Detailed explanation goes here
+    %ANALYSISMEAN Extract mean pixel intensity over vidoe
+    %   Result matches input dimensions.
     
     properties (Access=protected)
         sum;

@@ -1,6 +1,8 @@
 classdef AnalysisFrame < Analysis
-    %ANALYSISRANGE Summary of this class goes here
-    %   Detailed explanation goes here
+    %ANALYSISRANGE Extract specific frame(s) from the video
+    %   When created, pass one or more frame indices (as a vector). Frame
+    %   indices can be positive (counting from the start) or negative
+    %   (counting from the last frame).
     
     properties (Access=protected)
         frame_idx; % relative frame indices
@@ -19,12 +21,13 @@ classdef AnalysisFrame < Analysis
             % call parent setup
             setup@Analysis(FA, video_details, dim_in, type_in);
             
+            % set frame indices
+            FA.frame_idx_abs = FA.frame_idx;
+            
             % correct negative indices
             neg = FA.frame_idx < 0;
             if any(neg)
                 FA.frame_idx_abs(neg) = dim_in(end) + 1 + FA.frame_idx(neg);
-            else
-                FA.frame_idx_abs = FA.frame_idx;
             end
             
             % allocate frames

@@ -1,6 +1,7 @@
 classdef WriterMovie < Analysis
-    %WRITERMOVIE Summary of this class goes here
-    %   Detailed explanation goes here
+    %WRITERMOVIE Write movie file
+    %   Writes incoming frames to a movie file. Optionally specify the
+    %   frame rate at creation (otherwise matches input file).
     
     properties (Access=protected)
         movie;

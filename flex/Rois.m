@@ -1,6 +1,7 @@
 classdef Rois < handle
-    %ANNOTATOR Summary of this class goes here
-    %   Detailed explanation goes here
+    %ROIS Annotator for drawing regions of interest on an image
+    %   Useful in cases where regions of interest can not be automatically
+    %   extracted.
     
     properties
         default_diameter = 10;

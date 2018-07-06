@@ -1,6 +1,7 @@
 classdef AnalysisRange < Analysis
-    %ANALYSISRANGE Summary of this class goes here
-    %   Detailed explanation goes here
+    %ANALYSISRANGE Extract intensity range for each pixel
+    %   Returns two concatenated frames, one corresponding with the 
+    %   minimum values and one corresponding with the maximum values.
     
     properties (Access=protected)
         mn;

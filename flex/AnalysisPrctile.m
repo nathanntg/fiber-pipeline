@@ -1,6 +1,8 @@
 classdef AnalysisPrctile < Analysis
-    %ANALYSISPRCTILE Summary of this class goes here
-    %   Detailed explanation goes here
+    %ANALYSISPRCTILE Extract percentile intensity for each pixel
+    %   The further from the extremes (0 and 100), the more data that needs
+    %   to be kept in memory. This is a processor intensive analysis node,
+    %   as it must continually sort intensities to discard unneeded data.
     
     properties (Access=protected)
         per;

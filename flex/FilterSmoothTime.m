@@ -1,6 +1,6 @@
 classdef FilterSmoothTime < Filter
-    %FILTERSMOOTHTIME Summary of this class goes here
-    %   Detailed explanation goes here
+    %FILTERSMOOTHTIME Smooth over time
+    %   Pass the number of frames to use for smoothing.
     
     properties
         % TODO: potentially add non flat filters? 

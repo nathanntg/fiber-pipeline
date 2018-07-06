@@ -1,6 +1,5 @@
 classdef FilterSubtract < Filter
-    %FILTERSUBTRACT Summary of this class goes here
-    %   Detailed explanation goes here
+    %FILTERSUBTRACT Subtract backgroound from frame intensity
     
     properties
         background;
