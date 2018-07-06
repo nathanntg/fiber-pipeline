@@ -48,7 +48,7 @@ classdef Explorer < handle
             % calculate standard deviation
             EX.video_s = zeros(EX.d_height, EX.d_width, EX.d_trials);
             for i = 1:EX.d_trials
-                EX.video_s(:, :, i) = nanstd(video(:, :, :, i), 0, 3);
+                EX.video_s(:, :, i) = nanstd(video_smooth2(video(:, :, :, i), 3, 3), 0, 3);
             end
             
             % get screen size
@@ -171,6 +171,19 @@ classdef Explorer < handle
             % open figure
             figure;
             plot(EX.video_roe_smp, traces);
+            
+            % open plot_bci
+            % interpolate!
+            times = linspace(min(EX.video_roe_smp(:)), max(EX.video_roe_smp(:)), size(EX.video_roe_smp, 1));
+            traces_i = zeros(size(traces), 'like', traces);
+            for i = 1:size(traces, 2)
+                not_nan = ~isnan(EX.video_roe_smp(:, i));
+                traces_i(:, i) = interp1(EX.video_roe_smp(not_nan, i), traces(not_nan, i), times, 'pchip', 'extrap');
+            end
+            
+            % plot
+            figure;
+            plot_bci(times, traces_i, markolab_phase_scramble_1d(traces_i));
         end
         
         function cb_adjustImage(EX, ~, ~)
@@ -187,8 +200,8 @@ classdef Explorer < handle
             EX.updateImage(2, mask);
             
             % debugging
-            figure;
-            imagesc(mask);
+            %figure;
+            %imagesc(mask);
             
             % delete
             delete(h);
