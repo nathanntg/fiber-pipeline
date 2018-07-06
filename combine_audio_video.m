@@ -204,6 +204,11 @@ for i = 1:number_seq
     
     number_of_frames = length(cur_camera_timing);
     
+    % no frames?
+    if number_of_frames == 0
+        continue;
+    end
+    
     % load audio
     [audio, fs] = audioread(files_audio{i});
     audio = audio(:, 1);
