@@ -48,9 +48,9 @@ classdef WriterMovie < Analysis
             end
         end
         
-        function setup(FA, video_details, dim_in)
+        function setup(FA, video_details, dim_in, type_in)
             % call parent setup
-            setup@Analysis(FA, video_details, dim_in);
+            setup@Analysis(FA, video_details, dim_in, type_in);
             
             % movie 
             cur_movie = FA.movie;
@@ -80,11 +80,19 @@ classdef WriterMovie < Analysis
             else
                 FA.vh.FrameRate = FA.fps;
             end
+            
+            % open
+            open(FA.vh);
         end
         
         function runFrame(FA, frame, i)
             if isa(frame, 'uint16') || isa(frame, 'single')
                 frame = im2uint8(frame);
+            end
+            
+            % turn to color
+            if ismatrix(frame)
+                frame = repmat(frame, 1, 1, 3);
             end
             
             writeVideo(FA.vh, im2frame(frame));
