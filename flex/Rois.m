@@ -5,6 +5,10 @@ classdef Rois < handle
     
     properties
         default_diameter = 10;
+        
+        % only populated on close
+        centers;
+        radii;
     end
     
     properties (Access=protected)
@@ -20,7 +24,7 @@ classdef Rois < handle
     end
     
     methods
-        function RN = Rois(image)
+        function RN = Rois(image, centers, radii)
             RN.image = image;
             
             % create viewer window
@@ -29,7 +33,7 @@ classdef Rois < handle
             % set 
 %             set(RN.win, 'PaperPositionMode', 'auto');
 %             set(RN.win, 'InvertHardcopy', 'off');
-%             set(RN.win, 'Units', 'pixels');
+            set(RN.win, 'Units', 'pixels');
 %             set(RN.win, 'Pointer', 'crosshair');
             set(RN.win, 'WindowButtonDownFcn', {@RN.cb_clickWindow});
             set(RN.win, 'DeleteFcn', {@RN.cb_closeWindow});
@@ -40,7 +44,20 @@ classdef Rois < handle
             
             % show image
             imshow(RN.image, 'Parent', RN.axes, 'Border', 'tight');
-%             pan off;
+            pan off;
+
+            % initial values
+            if exist('centers', 'var') && exist('radii', 'var')
+                for i = 1:size(centers, 1)
+                    % add to annotations
+                    RN.annotations{end + 1} = imellipse(RN.axes, [...
+                        centers(i, 1) - radii(i), ...
+                        centers(i, 2) - radii(i), ...
+                        2 * radii(i), ...
+                        2 * radii(i) ...
+                        ]);
+                end
+            end
         end
         
         function delete(RN)
@@ -68,6 +85,8 @@ classdef Rois < handle
         end
         
         function cb_closeWindow(RN, h, event)
+            [RN.centers, RN.radii, ~] = RN.getAnnotations();
+            
             % nothing to do
             if ~isvalid(RN)
                 return;
@@ -87,6 +106,12 @@ classdef Rois < handle
             % convert to centers and radii
             centers = annots(:, 1:2) + annots(:, 3:4) ./ 2;
             radii = annots(:, 3) ./ 2;
+        end
+        
+        function [centers, radii] = waitForAnnotations(RN)
+            waitfor(RN.axes);
+            centers = RN.centers;
+            radii = RN.radii;
         end
     end
     
