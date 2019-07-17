@@ -32,13 +32,8 @@ classdef Reader < Node
         end
         
         function setup(FR, video_details, dim_in, type_in)
-            % call parent (empty)
+            % call parent (setup sub-nodes)
             setup@Node(FR, video_details, dim_in, type_in);
-            
-            % setup sub-nodes
-            for i = 1:length(FR.outputs)
-                FR.outputs{i}.setup(video_details, dim_in, type_in);
-            end
         end
         
         function runFrame(FR, ~, i)
