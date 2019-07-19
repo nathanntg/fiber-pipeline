@@ -40,7 +40,7 @@ classdef AnalysisRoi < Analysis
             % make masks
             FA.masks = cell(1, FA.number);
             for i = 1:FA.number
-                FA.masks{i} = find(((x - FA.roi_centers(i, 2)) .^ 2 + (y - FA.roi_centers(i, 1)) .^ 2) < (FA.roi_radii(i) .^ 2));
+                FA.masks{i} = find(((x - FA.roi_centers(i, 1)) .^ 2 + (y - FA.roi_centers(i, 2)) .^ 2) < (FA.roi_radii(i) .^ 2));
             end
             
             % make trace (always double)
